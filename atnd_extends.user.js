@@ -7,11 +7,11 @@
 (function (d, func) {
 
   var h = d.getElementsByTagName('head')[0];
-  var s1 = d.createElement("script");
-  s1.setAttribute("src", "http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js");
+  var s1 = d.createElement('script');
+  s1.setAttribute('src', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js');
   s1.addEventListener('load', function() {
     var s2 = d.createElement("script");
-    s2.textContent = "jQuery.noConflict();(" + func.toString() + ")(jQuery);";
+    s2.textContent = 'jQuery.noConflict();(' + func.toString() + ')(jQuery);';
     h.appendChild(s2);
   }, false);
   h.appendChild(s1);
@@ -21,9 +21,14 @@
   // CONST
   var SEARCH_API = 'http://api.atnd.org/events/';
 
-    // ATND Search Success Action
+  // ATND Search Success Action
   function searchSuccess(msg) {
-    window.alert(msg);
+    window.alert('success');
+  }
+
+  // ATND search Error Action
+  function searchError(msg) {
+    window.alert('error');
   }
 
   // createSearchForm html
@@ -39,16 +44,26 @@
 
   // ATND Ajax Search
   function searchApi() {
+    /*
+    GM_xmlhttpRequest({
+      method:"GET",
+      url: SEARCH_API,
+      onload:function(res){
+        window.alert(res);
+      }
+    });
+    */
     var queryStr = $('#gm_query').val();
     $.ajax({
       async : false,
-      type : 'GET',
-      timeout : 3000,
+      type : 'POST',
       url : SEARCH_API,
-      data : 'format=json&keyword=' + queryStr,
-      success : function(msg) {
-        window.alert(msg);
-      }
+      data : {
+        keyword : queryStr,
+        format : 'json'
+      },
+      success : searchSuccess,
+      error: searchError
     });
   }
 
